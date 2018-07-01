@@ -1,9 +1,9 @@
 
-package com.hossain.ju.bus.model;
+package com.hossain.ju.bus.model.schedule;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.hossain.ju.bus.Device;
+import com.hossain.ju.bus.*;
 
 public class Vehicle {
 
@@ -213,7 +213,7 @@ public class Vehicle {
         return device;
     }
 
-    public void setDevice(Device device) {
+    public void setDevice(com.hossain.ju.bus.Device device) {
         this.device = device;
     }
 

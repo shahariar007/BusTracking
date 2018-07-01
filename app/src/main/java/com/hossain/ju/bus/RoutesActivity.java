@@ -2,6 +2,7 @@ package com.hossain.ju.bus;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -152,23 +154,6 @@ public class RoutesActivity extends AppCompatActivity {
                     if (response != null && response.isSuccessful()) {
                         Log.e(TAG, response.body().getData().toString());
                         routeList = (ArrayList<Route>) response.body().getData();
-//                        final List<Route> routes = response.body().getData();
-//                        if (routes != null && routes.size() > 0) {
-//                            for (Route route : routes) {
-//                                Log.e(TAG, route.getName() + "");
-//                                route.setId(route.getId());
-//                                route.setCompanyId(route.getCompanyId());
-//                                route.setName(route.getName());
-//                                route.setSubtitle(route.getSubtitle());
-//                                route.setComments(route.getComments());
-//                                route.setFromTo(route.getFromTo());
-//                                route.setStatus(route.getStatus());
-//                                routeList.add(route);
-//                            }
-//                        } else {
-//
-//                        }
-
                         if (routeList != null && routeList.size() > 0) {
                             Log.e("SIZE:::", routeList.size() + "");
                             mAdapter = new RouteViewAdapter(mContext, routeList, getFavList(), bundle.getBoolean("fav"));
@@ -242,12 +227,24 @@ public class RoutesActivity extends AppCompatActivity {
 
     }
 
-    public void generateList(List<Schedule> listOfSubRoute) {
+    public void generateList( final List<Schedule> listOfSubRoute) {
         if (listOfSubRoute != null) {
             ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.custom_text_layout, listOfSubRoute);
             listViewOfBottomSheet.setAdapter(arrayAdapter);
             listViewOfBottomSheet.setDividerHeight(10);
             arrayAdapter.notifyDataSetChanged();
+            listViewOfBottomSheet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    Utils.toast(mContext,"POS: "+ listOfSubRoute.get(i).getId() );
+                    Intent intent = new Intent(mContext,MainActivity.class);
+                     Schedule schedule = listOfSubRoute.get(i);
+                    intent.putExtra(Utils.SCHEDULE_ID,schedule.getId() );
+                    startActivity(intent);
+                }
+            });
+
         }
     }
 

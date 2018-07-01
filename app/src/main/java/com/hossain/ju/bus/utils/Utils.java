@@ -44,6 +44,7 @@ public class Utils {
 	public final static String PASSWORD                             = "1234";
 	public final static String BEARER                             = "Bearer ";
 
+	public final static String SCHEDULE_ID                             = "SCHEDULE_ID ";
 
 	public Utils(Context context){
 		pDialog = new ProgressDialog(context);

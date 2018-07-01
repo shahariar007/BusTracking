@@ -1,10 +1,10 @@
 
-package com.hossain.ju.bus.model;
+package com.hossain.ju.bus.model.schedule;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Trip {
+public class Device {
 
     @SerializedName("id")
     @Expose
@@ -15,27 +15,15 @@ public class Trip {
     @SerializedName("company_id")
     @Expose
     private Integer companyId;
-    @SerializedName("date")
+    @SerializedName("name")
     @Expose
-    private String date;
-    @SerializedName("endtime")
+    private String name;
+    @SerializedName("imei")
     @Expose
-    private Object endtime;
-    @SerializedName("trip_code")
+    private String imei;
+    @SerializedName("sim")
     @Expose
-    private String tripCode;
-    @SerializedName("schedule_id")
-    @Expose
-    private Integer scheduleId;
-    @SerializedName("vehicle_id")
-    @Expose
-    private Integer vehicleId;
-    @SerializedName("driver_id")
-    @Expose
-    private Integer driverId;
-    @SerializedName("helper_id")
-    @Expose
-    private Integer helperId;
+    private String sim;
     @SerializedName("status")
     @Expose
     private String status;
@@ -51,9 +39,6 @@ public class Trip {
     @SerializedName("deleted_at")
     @Expose
     private Object deletedAt;
-    @SerializedName("vehicle")
-    @Expose
-    private Vehicle vehicle;
 
     public Integer getId() {
         return id;
@@ -79,60 +64,28 @@ public class Trip {
         this.companyId = companyId;
     }
 
-    public String getDate() {
-        return date;
+    public String getName() {
+        return name;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Object getEndtime() {
-        return endtime;
+    public String getImei() {
+        return imei;
     }
 
-    public void setEndtime(Object endtime) {
-        this.endtime = endtime;
+    public void setImei(String imei) {
+        this.imei = imei;
     }
 
-    public String getTripCode() {
-        return tripCode;
+    public String getSim() {
+        return sim;
     }
 
-    public void setTripCode(String tripCode) {
-        this.tripCode = tripCode;
-    }
-
-    public Integer getScheduleId() {
-        return scheduleId;
-    }
-
-    public void setScheduleId(Integer scheduleId) {
-        this.scheduleId = scheduleId;
-    }
-
-    public Integer getVehicleId() {
-        return vehicleId;
-    }
-
-    public void setVehicleId(Integer vehicleId) {
-        this.vehicleId = vehicleId;
-    }
-
-    public Integer getDriverId() {
-        return driverId;
-    }
-
-    public void setDriverId(Integer driverId) {
-        this.driverId = driverId;
-    }
-
-    public Integer getHelperId() {
-        return helperId;
-    }
-
-    public void setHelperId(Integer helperId) {
-        this.helperId = helperId;
+    public void setSim(String sim) {
+        this.sim = sim;
     }
 
     public String getStatus() {
@@ -173,14 +126,6 @@ public class Trip {
 
     public void setDeletedAt(Object deletedAt) {
         this.deletedAt = deletedAt;
-    }
-
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
     }
 
 }

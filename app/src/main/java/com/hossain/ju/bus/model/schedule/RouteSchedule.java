@@ -1,5 +1,5 @@
 
-package com.hossain.ju.bus.model;
+package com.hossain.ju.bus.model.schedule;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -45,12 +45,12 @@ public class RouteSchedule {
     @SerializedName("deleted_at")
     @Expose
     private Object deletedAt;
-    @SerializedName("route")
-    @Expose
-    private String route;
     @SerializedName("schedule")
     @Expose
-    private Schedule schedule;
+    private String schedule;
+    @SerializedName("trip")
+    @Expose
+    private Trip trip;
 
     public Integer getId() {
         return id;
@@ -156,20 +156,20 @@ public class RouteSchedule {
         this.deletedAt = deletedAt;
     }
 
-    public String getRoute() {
-        return route;
-    }
-
-    public void setRoute(String route) {
-        this.route = route;
-    }
-
-    public Schedule getSchedule() {
+    public String getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(Schedule schedule) {
+    public void setSchedule(String schedule) {
         this.schedule = schedule;
+    }
+
+    public Trip getTrip() {
+        return trip;
+    }
+
+    public void setTrip(Trip trip) {
+        this.trip = trip;
     }
 
 }

@@ -2,8 +2,8 @@ package com.hossain.ju.bus.networking;
 
 
 import com.hossain.ju.bus.model.Notice;
-import com.hossain.ju.bus.model.RouteSchedule;
 import com.hossain.ju.bus.model.route.Route;
+import com.hossain.ju.bus.model.schedule.RouteSchedule;
 
 import java.util.HashMap;
 
@@ -27,13 +27,19 @@ public interface APIServices {
     Call<ResponseBody> login(@Body HashMap<String, Object> body);
 
 
-    @GET("get-location/{id}")
-    @Headers({"app-type: consumer-app", "Content-Type: application/json"})
-    Call<ResponseWrapperArray<RouteSchedule>> getLocation(@Header("Authorization") String auth, @Path("id") int id);
 
     @GET("get-all-routes")
     @Headers({"app-type: consumer-app", "Content-Type: application/json"})
     Call<ResponseWrapperArray<Route>> getAllRoutes(@Header("Authorization") String auth);
+
+    @GET("get-location-by-schedule/{id}")
+    @Headers({"app-type: consumer-app", "Content-Type: application/json"})
+    Call<ResponseWrapperObject<RouteSchedule>> getBusLocationBySchedule(@Header("Authorization") String auth, @Path("id") int id);
+
+    @GET("get-location/{id}")
+    @Headers({"app-type: consumer-app", "Content-Type: application/json"})
+    Call<ResponseWrapperArray<RouteSchedule>> getLocation(@Header("Authorization") String auth, @Path("id") int id);
+
 
     @GET("notice")
     @Headers({"app-type: consumer-app", "Content-Type: application/json"})

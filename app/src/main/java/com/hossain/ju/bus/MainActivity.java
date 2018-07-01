@@ -31,10 +31,10 @@ import com.hossain.ju.bus.helper.SharedPreferencesHelper;
 import com.hossain.ju.bus.location.LocationUpdateIntentService;
 import com.hossain.ju.bus.location.LocationUtils;
 import com.hossain.ju.bus.model.DistanceDisplayModel;
-import com.hossain.ju.bus.model.RouteSchedule;
+import com.hossain.ju.bus.model.schedule.RouteSchedule;
 import com.hossain.ju.bus.networking.APIClient;
 import com.hossain.ju.bus.networking.APIServices;
-import com.hossain.ju.bus.networking.ResponseWrapperArray;
+import com.hossain.ju.bus.networking.ResponseWrapperObject;
 import com.hossain.ju.bus.utils.APIError;
 import com.hossain.ju.bus.utils.Constants;
 import com.hossain.ju.bus.utils.CustomProgressDialog;
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
         startIntentService();
 
-        getBusLocation(getIntent().getExtras().getInt("id"));
+        getBusLocation(getIntent().getExtras().getInt(Utils.SCHEDULE_ID));
         setDistanceDisplay();
     }
 
@@ -307,12 +307,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         final CustomProgressDialog progressDialog = UI.show(MainActivity.this);
         String token = Utils.BEARER + SharedPreferencesHelper.getToken(mContext);
-        // Log.e("Token::",token);
-        Call<ResponseWrapperArray<RouteSchedule>> response = apiServices.getLocation(token, id);
+        Log.e("SCHE_ID::",id+"");
+        Call<ResponseWrapperObject<RouteSchedule>> response = apiServices.getBusLocationBySchedule(token, id);
 
-        response.enqueue(new Callback<ResponseWrapperArray<RouteSchedule>>() {
+        response.enqueue(new Callback<ResponseWrapperObject<RouteSchedule>>() {
             @Override
-            public void onResponse(Call<ResponseWrapperArray<RouteSchedule>> call, Response<ResponseWrapperArray<RouteSchedule>> response) {
+            public void onResponse(Call<ResponseWrapperObject<RouteSchedule>> call, Response<ResponseWrapperObject<RouteSchedule>> response) {
                 progressDialog.dismissAllowingStateLoss();
 
                 Log.e(TAG, response.body().getData().toString());
@@ -345,6 +345,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 Utils.toast(mContext, error.message());
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Log.e(TAG,e.getMessage());
                         }
                     }
                 } catch (Exception e) {
@@ -353,10 +354,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             @Override
-            public void onFailure(Call<ResponseWrapperArray<RouteSchedule>> call, Throwable t) {
+            public void onFailure(Call<ResponseWrapperObject<RouteSchedule>> call, Throwable t) {
                 // there is more than just a failing request (like: no internet connection)
                 progressDialog.dismissAllowingStateLoss();
-                ;
+
                 Log.e(TAG, t.getMessage() + "");
                 Utils.toast(mContext, "data Failed!");
             }

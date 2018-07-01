@@ -162,4 +162,12 @@ public class Route {
         this.schedule = schedule;
     }
 
+
+    @Override
+    public String toString() {
+        return "Route{" +
+                "name='" + name + '\'' +
+                ", subtitle='" + subtitle + '\'' +
+                '}';
+    }
 }
