@@ -4,11 +4,13 @@ package com.hossain.ju.bus.networking;
 import com.hossain.ju.bus.model.Notice;
 import com.hossain.ju.bus.model.route.Route;
 import com.hossain.ju.bus.model.schedule.RouteSchedule;
+import com.hossain.ju.bus.model.user.User;
 
 import java.util.HashMap;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -26,6 +28,13 @@ public interface APIServices {
     @Headers({"app-type: consumer-app", "Content-Type: application/json"})
     Call<ResponseBody> login(@Body HashMap<String, Object> body);
 
+    @GET("user")
+    @Headers({"app-type: consumer-app", "Content-Type: application/json"})
+    Call<Response<User>> getUserInfo(@Header("Authorization") String auth);
+
+    @POST("user")
+    @Headers({"app-type: consumer-app", "Content-Type: application/json"})
+    Call<Response<User>> editUser(@Header("Authorization") String auth, @Body User user);
 
 
     @GET("get-all-routes")
