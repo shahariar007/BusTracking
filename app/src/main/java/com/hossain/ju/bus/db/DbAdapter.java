@@ -15,7 +15,7 @@ import static com.hossain.ju.bus.db.LocationContract.TransLocation.COLUMN_NAME_F
 
 
 /**
- * Created by mohammod.hossain on 2/17/2016.
+ * Created by Motuza on 2/17/2016.
  */
 public class DbAdapter {
     private static final String TAG = "DbAdapter";
