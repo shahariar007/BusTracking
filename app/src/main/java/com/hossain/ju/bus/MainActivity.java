@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,20 +36,20 @@ import com.hossain.ju.bus.model.schedule.RouteSchedule;
 import com.hossain.ju.bus.networking.APIClient;
 import com.hossain.ju.bus.networking.APIServices;
 import com.hossain.ju.bus.networking.ResponseWrapperObject;
-import com.hossain.ju.bus.utils.APIError;
 import com.hossain.ju.bus.utils.Constants;
 import com.hossain.ju.bus.utils.CustomProgressDialog;
-import com.hossain.ju.bus.utils.ErrorUtils;
 import com.hossain.ju.bus.utils.TempData;
 import com.hossain.ju.bus.utils.Utils;
 import com.hossain.ju.bus.views.UI;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -307,21 +308,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         final CustomProgressDialog progressDialog = UI.show(MainActivity.this);
         String token = Utils.BEARER + SharedPreferencesHelper.getToken(mContext);
-        Log.e("SCHE_ID::",id+"");
-        Call<ResponseWrapperObject<RouteSchedule>> response = apiServices.getBusLocationBySchedule(token, id);
-
-        response.enqueue(new Callback<ResponseWrapperObject<RouteSchedule>>() {
+        Log.e("SCHE_ID::", id + "");
+        apiServices.getBusLocationBySchedule(token, id).delay(2, TimeUnit.SECONDS).repeat().observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io()).subscribe(new Observer<ResponseWrapperObject<RouteSchedule>>() {
             @Override
-            public void onResponse(Call<ResponseWrapperObject<RouteSchedule>> call, Response<ResponseWrapperObject<RouteSchedule>> response) {
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(ResponseWrapperObject<RouteSchedule> routeScheduleResponseWrapperObject) {
                 progressDialog.dismissAllowingStateLoss();
-
-                Log.e(TAG, response.body().getData().toString());
+                Log.d("TXXXXX","HIT");
                 try {
-                    if (response != null && response.isSuccessful()) {
-                        Log.e(TAG, response.body().getData().toString());
-                        Log.e(TAG, response.body().getData() + "");
 
-                        RouteSchedule route = (RouteSchedule) response.body().getData();
+                    if (routeScheduleResponseWrapperObject.getStatus().contains("ok")) {
+                        RouteSchedule route = routeScheduleResponseWrapperObject.getData();
                         Log.e(TAG, route.getDeviceId() + "::" + route.getLatitude() + "::" + route.getLongitude());
                         String address = LocationUtils.getAddress(mContext, Double.valueOf(route.getLatitude()), Double.valueOf(route.getLongitude()));
 
@@ -334,34 +335,79 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Log.e(TAG, "DIStance::" + distance);
                         txtDistance.setText("" + Utils.round(distance));
 
-
                         mapFragment.getMapAsync((OnMapReadyCallback) mContext);
-
-                    } else {
-                        // parse the response body …
-                        try {
-                            APIError error = ErrorUtils.parseError(response);
-                            if (error != null)
-                                Utils.toast(mContext, error.message());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Log.e(TAG,e.getMessage());
-                        }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    e.getStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseWrapperObject<RouteSchedule>> call, Throwable t) {
-                // there is more than just a failing request (like: no internet connection)
+            public void onError(Throwable e) {
                 progressDialog.dismissAllowingStateLoss();
-
-                Log.e(TAG, t.getMessage() + "");
                 Utils.toast(mContext, "data Failed!");
             }
+
+            @Override
+            public void onComplete() {
+                Log.d("TXXXXX","HIT");
+                Toast.makeText(mContext, "Complete", Toast.LENGTH_SHORT).show();
+            }
         });
+//        Call<ResponseWrapperObject<RouteSchedule>> response = apiServices.getBusLocationBySchedule(token, id);
+//
+//        response.enqueue(new Callback<ResponseWrapperObject<RouteSchedule>>() {
+//            @Override
+//            public void onResponse(Call<ResponseWrapperObject<RouteSchedule>> call, Response<ResponseWrapperObject<RouteSchedule>> response) {
+//                progressDialog.dismissAllowingStateLoss();
+//
+//                Log.e(TAG, response.body().getData().toString());
+//                try {
+//                    if (response != null && response.isSuccessful()) {
+//                        Log.e(TAG, response.body().getData().toString());
+//                        Log.e(TAG, response.body().getData() + "");
+//
+//                        RouteSchedule route = (RouteSchedule) response.body().getData();
+//                        Log.e(TAG, route.getDeviceId() + "::" + route.getLatitude() + "::" + route.getLongitude());
+//                        String address = LocationUtils.getAddress(mContext, Double.valueOf(route.getLatitude()), Double.valueOf(route.getLongitude()));
+//
+//                        TempData.CURRENT_TRANSPORT_LOC = address;
+//                        TempData.LAST_LATITUDE = Double.valueOf(route.getLatitude());
+//                        TempData.LAST_LONGITUDE = Double.valueOf(route.getLongitude());
+//                        txtBusLocation.setText(address);
+//
+//                        double distance = Utils.calculationByDistance(new LatLng(TempData.USER_LAT, TempData.USER_LONG), new LatLng(TempData.LAST_LATITUDE, TempData.LAST_LONGITUDE));
+//                        Log.e(TAG, "DIStance::" + distance);
+//                        txtDistance.setText("" + Utils.round(distance));
+//
+//
+//                        mapFragment.getMapAsync((OnMapReadyCallback) mContext);
+//
+//                    } else {
+//                        // parse the response body …
+//                        try {
+//                            APIError error = ErrorUtils.parseError(response);
+//                            if (error != null)
+//                                Utils.toast(mContext, error.message());
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            Log.e(TAG, e.getMessage());
+//                        }
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseWrapperObject<RouteSchedule>> call, Throwable t) {
+//                // there is more than just a failing request (like: no internet connection)
+//                progressDialog.dismissAllowingStateLoss();
+//
+//                Log.e(TAG, t.getMessage() + "");
+//                Utils.toast(mContext, "data Failed!");
+//            }
+//        });
 
     }
 

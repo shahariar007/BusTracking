@@ -8,6 +8,7 @@ import com.hossain.ju.bus.model.user.User;
 
 import java.util.HashMap;
 
+import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -43,7 +44,7 @@ public interface APIServices {
 
     @GET("get-location-by-schedule/{id}")
     @Headers({"app-type: consumer-app", "Content-Type: application/json"})
-    Call<ResponseWrapperObject<RouteSchedule>> getBusLocationBySchedule(@Header("Authorization") String auth, @Path("id") int id);
+    Observable<ResponseWrapperObject<RouteSchedule>> getBusLocationBySchedule(@Header("Authorization") String auth, @Path("id") int id);
 
     @GET("get-location/{id}")
     @Headers({"app-type: consumer-app", "Content-Type: application/json"})
