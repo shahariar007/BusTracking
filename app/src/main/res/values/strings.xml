@@ -70,5 +70,9 @@
     <string name="MAP_API_KEY">AIzaSyABV4iMRNv5oLuve0mZIv6zs0E4PolSQzk</string>
     <string name="notification">Notification</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="openDrawer">open_drawer</string>
+    <string name="closeDrawer">close_drawer</string>
 
 </resources>

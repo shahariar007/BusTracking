@@ -6,6 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -34,6 +39,9 @@ import java.util.List;
 public class MenuActivity extends AppCompatActivity {
     private GridMenuFragment mGridMenuFragment;
     GridView gridView;
+    private DrawerLayout dl;
+    private ActionBarDrawerToggle t;
+    private NavigationView nv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +50,29 @@ public class MenuActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Log.e("TAG:", "Called2.");
+
+        dl = (DrawerLayout) findViewById(R.id.activity_main);
+        t = new ActionBarDrawerToggle(this, dl, R.string.openDrawer, R.string.closeDrawer);
+        dl.addDrawerListener(t);
+        t.syncState();
+        nv = (NavigationView) findViewById(R.id.nv);
+        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.account:
+                        Toast.makeText(MenuActivity.this, "My Account", Toast.LENGTH_SHORT).show();
+                    case R.id.settings:
+                        Toast.makeText(MenuActivity.this, "Settings", Toast.LENGTH_SHORT).show();
+                    case R.id.mycart:
+                        Toast.makeText(MenuActivity.this, "My Cart", Toast.LENGTH_SHORT).show();
+                    default:
+                        toggle();
+                        return true;
+                }
+            }
+        });
         //makeBlurConfig();
 
 //        mGridMenuFragment = GridMenuFragment.newInstance(R.drawable.ju_bg);
@@ -123,12 +154,23 @@ public class MenuActivity extends AppCompatActivity {
         return true;
     }
 
+    public void toggle() {
+        if (dl.isDrawerOpen(GravityCompat.END)) {
+            dl.closeDrawer(GravityCompat.END);
+        } else {
+            dl.openDrawer(GravityCompat.END);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.notification:
                 startActivity(new Intent(this, NotificationActivity.class));
                 return true;
+            case R.id.menus: {
+                toggle();
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
